@@ -1,5 +1,11 @@
-import myFunc from "../index";
+import supertest from "supertest";
+import app from "../index";
 
-it('expect myFunc() to be true', () => {
-    expect(myFunc).toBeTrue;
-})
+const request = supertest(app);
+
+describe("Test endpoint responses", () => {
+  it("gets the api endpoint", async () => {
+    const response = await request.get("/api");
+    expect(response.status).toBe(200);
+  });
+});
