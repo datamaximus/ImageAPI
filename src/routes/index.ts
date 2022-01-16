@@ -1,13 +1,11 @@
 import express from 'express';
-import route1 from './api/route1';
-import route2 from './api/route2';
+import images from './api/images';
 const routes = express.Router();
 
 routes.get('/', (req, res) => {
     res.send('main API route');
 });
 
-routes.use('/route1', route1);
-routes.use('/route2', route2);
+routes.use('/images', images);
 
 export default routes;
