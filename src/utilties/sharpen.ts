@@ -7,29 +7,27 @@ const path = "./public/assets/thumb/";
 const sharpen = async (
   req: express.Request,
   res: express.Response,
-  next: Function
+  next: () => void
 ) => {
-  let filename = req.query.filename;
-  let width = req.query.width;
-  let height = req.query.height;
+  const filename = String(req.query.filename);
+  const width = String(req.query.width);
+  const height = String(req.query.height);
 
   fs.access(
-    `${path}${filename}${width}x${height}.jpeg`,
+    String(`${path}${filename}${width}x${height}.jpeg`),
     fs.constants.R_OK,
     async (err) => {
       if (err) {
-        await sharp(`./public/assets/full/${filename}.jpeg`)
+        await sharp(String(`./public/assets/full/${filename}.jpeg`))
           .resize(Number(width), Number(height))
-          .toFile(`${path}${filename}${width}x${height}.jpeg`);
-        res.sendFile(`${path}${filename}${width}x${height}.jpeg`, {
+          .toFile(String(`${path}${filename}${width}x${height}.jpeg`));
+        res.sendFile(String(`${path}${filename}${width}x${height}.jpeg`), {
           root: ".",
         });
-        console.log("Resizing image");
       } else {
-        res.sendFile(`${path}${filename}${width}x${height}.jpeg`, {
+        res.sendFile(String(`${path}${filename}${width}x${height}.jpeg`), {
           root: ".",
         });
-        console.log("Loads image");
       }
     }
   );

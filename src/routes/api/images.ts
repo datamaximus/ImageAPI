@@ -1,9 +1,10 @@
-import express from 'express';
-import sharpen from '../../utilties/sharpen';
+import express from "express";
+import sharpen from "../../utilties/sharpen";
 
 const images = express.Router();
 
-images.get('/', sharpen, async (req, res) => {
+images.get("/", sharpen, async (req, res) => {
+  res.statusCode;
 });
 
 export default images;
