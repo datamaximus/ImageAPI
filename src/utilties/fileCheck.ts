@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from 'fs';
 
 // Check if file exists at provide path
 function fileExists(path: string): boolean {

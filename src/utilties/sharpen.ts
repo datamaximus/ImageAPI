@@ -1,9 +1,11 @@
-import express from "express";
-import sharp from "sharp";
-import fileExists from "./fileCheck";
+import express from 'express';
+import fileExists from './fileCheck';
+import path from 'path';
+import resize from './resize';
 
 // Set base path
-const path = "./public/assets/thumb/";
+const inputPath = path.join(__dirname, '../../public/assets/full/');
+const outputPath = path.join(__dirname, '../../public/assets/thumb/');
 
 async function sharpen(
   req: express.Request,
@@ -14,29 +16,30 @@ async function sharpen(
   const filename = String(req.query.filename);
   const width = String(req.query.width);
   const height = String(req.query.height);
-  const resizedFile = String(`${path}${filename}${width}x${height}.jpeg`);
+  const resizedFile = String(`${outputPath}${filename}${width}x${height}.jpeg`);
 
   // Check if file exists in local directory
   const exists = fileExists(String(`${resizedFile}`));
 
   if (!exists) {
     try {
-      await sharp(String(`./public/assets/full/${filename}.jpeg`))
-        .resize(Number(width), Number(height))
-        .toFile(String(resizedFile));
-      res.sendFile(String(resizedFile), {
-        root: ".",
-      });
+      await resize(
+        `${inputPath}${filename}.jpeg`,
+        Number(width),
+        Number(height),
+        resizedFile
+      );
+      res.sendFile(String(resizedFile));
     } catch (err) {
-      next(err);
+      res.send(
+        'API cannot process this request. Please ensure all query parameters are included and valid. File must exist in local assests and width and height must be positive numbers.'
+      );
     }
   } else {
     try {
-      res.sendFile(String(resizedFile), {
-        root: ".",
-      });
+      res.sendFile(String(resizedFile));
     } catch (err) {
-      next(err);
+      res.send('Whoops. Something went wrong. Please try agan.');
     }
   }
   next();
