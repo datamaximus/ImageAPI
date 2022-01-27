@@ -14,6 +14,7 @@
   - `npm run launch` to start local server on port 3000
   - `npm run start` starts server with nodemon
   - `npm run test` to build and execute jasmine test suite
+  - `npm run prettier` to run code formatting
   - `npm run lint` to run linter and prettier
   
 ## Testing
