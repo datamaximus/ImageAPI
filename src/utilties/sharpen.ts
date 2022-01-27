@@ -31,15 +31,17 @@ async function sharpen(
       );
       res.sendFile(String(resizedFile));
     } catch (err) {
-      res.send(
-        'API cannot process this request. Please ensure all query parameters are included and valid. File must exist in local assests and width and height must be positive numbers.'
-      );
+      res
+        .status(400)
+        .send(
+          'API cannot process this request. Please ensure all query parameters are included and valid. File must exist in local assests and width and height must be positive numbers.'
+        );
     }
   } else {
     try {
       res.sendFile(String(resizedFile));
     } catch (err) {
-      res.send('Whoops. Something went wrong. Please try agan.');
+      res.status(500).send('Whoops. Something went wrong. Please try agan.');
     }
   }
   next();

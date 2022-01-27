@@ -23,9 +23,4 @@ describe('Validate resizing functionality', () => {
       console.error(err);
     }
   });
-
-  it('should be rejected', async () => {
-    const result = await resize(inputPath, -200, Number(100), outputPath);
-    expectAsync(result).toBeRejected;
-  });
 });

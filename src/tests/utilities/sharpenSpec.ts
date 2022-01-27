@@ -14,14 +14,14 @@ describe('Validate imaging processing middleware', () => {
   describe('Test /images for error handling', () => {
     it('should handle error for missing or invalid query string parameters', async () => {
       const response = await request.get('/api/images');
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(400);
     });
 
     it('should handle error for query file not found', async () => {
       const response = await request.get(
         '/api/images?filename=missing&width=800&height=600'
       );
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(400);
     });
   });
 });
