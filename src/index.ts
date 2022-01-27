@@ -6,6 +6,6 @@ const port = 3000;
 
 app.use("/api", routes);
 
-app.listen(port, () => console.log(`Listeing on port ${port}!`));
+app.listen(port, (): void => console.log(`Listeing on port ${port}!`));
 
 export default app;

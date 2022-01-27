@@ -1,38 +1,42 @@
 import express from "express";
 import sharp from "sharp";
-import fs from "fs";
+import fileExists from "./fileCheck";
 
 const path = "./public/assets/thumb/";
 
-const sharpen = async (
+async function sharpen(
   req: express.Request,
   res: express.Response,
-  next: () => void
-) => {
+  next: express.NextFunction
+): Promise<void> {
   const filename = String(req.query.filename);
   const width = String(req.query.width);
   const height = String(req.query.height);
+  const resizedFile = String(`${path}${filename}${width}x${height}.jpeg`);
 
-  fs.access(
-    String(`${path}${filename}${width}x${height}.jpeg`),
-    fs.constants.R_OK,
-    async (err) => {
-      if (err) {
-        await sharp(String(`./public/assets/full/${filename}.jpeg`))
-          .resize(Number(width), Number(height))
-          .toFile(String(`${path}${filename}${width}x${height}.jpeg`));
-        res.sendFile(String(`${path}${filename}${width}x${height}.jpeg`), {
-          root: ".",
-        });
-      } else {
-        res.sendFile(String(`${path}${filename}${width}x${height}.jpeg`), {
-          root: ".",
-        });
-      }
+  const exists = fileExists(String(`./public/assets/full/${filename}.jpeg`));
+
+  if (exists) {
+    try {
+      await sharp(String(`./public/assets/full/${filename}.jpeg`))
+        .resize(Number(width), Number(height))
+        .toFile(String(resizedFile));
+      res.sendFile(String(resizedFile), {
+        root: ".",
+      });
+    } catch (err) {
+      next(err);
     }
-  );
-
+  } else {
+    try {
+      res.sendFile(String(resizedFile), {
+        root: ".",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
   next();
-};
+}
 
 export default sharpen;
