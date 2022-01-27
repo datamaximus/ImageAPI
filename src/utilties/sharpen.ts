@@ -2,6 +2,7 @@ import express from "express";
 import sharp from "sharp";
 import fileExists from "./fileCheck";
 
+// Set base path
 const path = "./public/assets/thumb/";
 
 async function sharpen(
@@ -9,14 +10,16 @@ async function sharpen(
   res: express.Response,
   next: express.NextFunction
 ): Promise<void> {
+  // Set resizing values form query
   const filename = String(req.query.filename);
   const width = String(req.query.width);
   const height = String(req.query.height);
   const resizedFile = String(`${path}${filename}${width}x${height}.jpeg`);
 
-  const exists = fileExists(String(`./public/assets/full/${filename}.jpeg`));
+  // Check if file exists in local directory
+  const exists = fileExists(String(`${resizedFile}`));
 
-  if (exists) {
+  if (!exists) {
     try {
       await sharp(String(`./public/assets/full/${filename}.jpeg`))
         .resize(Number(width), Number(height))
